@@ -70,7 +70,6 @@ def main():
 			Y_calculado = Objeto_y.calcular_Y()
 			Error = Objeto_y.calcular_error(Y_experimental,Y_calculado)
 			TOL = Error
-			print("Hola mundo!!")
 
 		Results = np.append(Results,np.append(np.append(Temperature[i],vector_k,),Error))
 		puntero1 = puntero
@@ -82,14 +81,30 @@ def main():
 		TOL = 1e-04
 
 	Results = Results.reshape((len(Temperature),2 + matriz_nodos.shape[0]))
-	Results = Results.reshape((4,12))
+
+	# Cálculo de los parámetros Arrhenius
+	Objeto_Y = calcular_Yield([],[],[],[])
+	matriz_k = Results[:,1:matriz_nodos.shape[0] + 1]
+	log_k_parameters = Objeto_Y.calcular_parametros_logk(matriz_k,Temperature)
+
 	title = ['Temperature °C']
 	for i in range(matriz_nodos.shape[0]):
 		title.append('k'+str(i+1))
 	title.append('Error (%)')
+	df1 = pd.DataFrame(Results, columns = title)
 
-	df = pd.DataFrame(Results, columns = title)
-	df.to_excel('Results.xlsx', sheet_name='Sheet1',index = False)
+	title.remove('Error (%)')
+	title.remove('Temperature °C')
+	index = ['Pendiente','Intercepto','Ajuste']
+	df2 = pd.DataFrame(log_k_parameters, columns = title, index = index)
+
+	with pd.ExcelWriter('Results.xlsx') as writer:
+		df1.to_excel(writer, sheet_name='Sheet1', na_rep = 'NaN')
+		df2.to_excel(writer, sheet_name='Sheet2', na_rep = 'NaN')
+
+	#Con esta función se calcula los k's a una temperatura específica
+	print(Objeto_Y.calcular_k_de_T(340,log_k_parameters[0:2]))
+
 if __name__ == '__main__':
 	main()
 
