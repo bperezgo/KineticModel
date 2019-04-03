@@ -20,5 +20,4 @@ def Regresion_lineal(X, Y):
 	suma_dif2 = np.sum(Diferencia2**2)
 
 	r_2 = 1 - suma_dif1/suma_dif2
-	# r_2 no se devuelve
 	return([m,b,r_2])
