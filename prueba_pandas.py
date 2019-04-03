@@ -11,7 +11,7 @@ from Metodos.normalizar import *
 from Metodos.calcular_Yield import *
 
 
-Temperature = [320,350,360,380]
+Temperature = np.array([320,350,360,380])
 Error = [0.02,4.58,6.61,0.69]
 vector_k1 = [0.00214,0.00131,0.00030,0.00006,0.00670,0.00491,0,0.00105,0,0]
 vector_k2 = [0.00845,0.00610,0.00113,0.00073,0.00282,0.00141,0,0.00046,0,0]
@@ -25,11 +25,9 @@ Results = np.append(Results,np.append(np.append(Temperature[2],vector_k3,),Error
 Results = np.append(Results,np.append(np.append(Temperature[3],vector_k4,),Error[3]))
 
 Results = Results.reshape((4,12))
-title = ['Temperature °C']
-for i in range(10):
-	title.append('k'+str(i+1))
-title.append('Error (%)')
-print(title)
-df = pd.DataFrame(Results, columns = title)
-print(df)
-df.to_excel('path_to_file.xlsx', sheet_name='Sheet1',index = False)
+
+Objeto_Y = calcular_Yield([],[],[],[])
+matriz_k = Results[:,1:11]
+log_k_parameters = Objeto_Y.calcular_parametros_logk(matriz_k,Temperature)
+
+print(Objeto_Y.calcular_k_de_T(340,log_k_parameters[0:2]))
