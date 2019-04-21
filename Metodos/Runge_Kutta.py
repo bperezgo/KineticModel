@@ -1,5 +1,27 @@
 import numpy as np
 
+class Runge_Kutta(object):
+	def __init__(self,thao,matriz_y_experimental,matriz_nodos_reacciones):
+		# vector_y_experimental hace referencia al valor experimental, con el que se calcularía
+		# el error respecto al valor que de la aproximación deRunge Kutta
+		self.thao = thao
+		self.matriz_y_experimental = matriz_y_experimental
+		self.matriz_nodos_reacciones = matriz_nodos_reacciones
+	def funcionRungeKutta (self,vector_k):
+		"""
+		Éste método sólo está diseñado para utilizarse en la regresión no lineal
+		"""
+		vector = []
+		for i in range(self.thao.shape[0] - 1):
+			vector = np.append(vector, Runge_Kutta_Orden2(self.thao[i],self.thao[i+1],vector_k,\
+			self.matriz_y_experimental[i],self.matriz_nodos_reacciones) - self.matriz_y_experimental[i + 1])
+		return(vector)
+	def vector_k_estimacion_inicial(self):
+		# Usar algoritmo de Monte Carlo para el vector_k_estimacion
+		size = self.matriz_nodos_reacciones.shape[0]
+		vector_k = np.random.random(size)
+		return(vector_k)
+
 def matriz_concentraciones(vector_y,matriz_nodos_reacciones):
 	"""
 	Ejemplo de matriz_nodos_reacciones:
@@ -42,24 +64,3 @@ def calculo_k2(vector_k, vector_y, t_i, t_i_1, vector_k_1,matriz_nodos_reaccione
 	vector_k_2 = matriz_y @ vector_k
 	return(vector_k_2)
 
-class Runge_Kutta(object):
-	def __init__(self,thao,matriz_y_experimental,matriz_nodos_reacciones):
-		# vector_y_experimental hace referencia al valor experimental, con el que se calcularía
-		# el error respecto al valor que de la aproximación deRunge Kutta
-		self.thao = thao
-		self.matriz_y_experimental = matriz_y_experimental
-		self.matriz_nodos_reacciones = matriz_nodos_reacciones
-	def funcionRungeKutta (self,vector_k):
-		"""
-		Éste método sólo está diseñado para utilizarse en la regresión no lineal
-		"""
-		vector = []
-		for i in range(self.thao.shape[0] - 1):
-			vector = np.append(vector, Runge_Kutta_Orden2(self.thao[i],self.thao[i+1],vector_k,\
-			self.matriz_y_experimental[i],self.matriz_nodos_reacciones) - self.matriz_y_experimental[i + 1])
-		return(vector)
-	def vector_k_estimacion_inicial(self):
-		# Usar algoritmo de Monte Carlo para el vector_k_estimacion
-		size = self.matriz_nodos_reacciones.shape[0]
-		vector_k = np.random.random(size)
-		return(vector_k)
