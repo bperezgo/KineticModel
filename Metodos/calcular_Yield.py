@@ -51,6 +51,9 @@ class calcular_Yield(object):
 		log: es el logaritmo natural
 		Unidades, si la temperatura se ingresó en °C entonces esta es igual a 'C'
 		Si se ingresó como °F entonces esta es igual a 'F'
+
+		Nota: Guardar los datos con el intervalo en el cual es válida la regresión, y especificar
+		partes en que la función es cero.
 		"""
 		# un try except evitará que se ingrese un valor erróneo
 		if unidades == 'C':
@@ -60,7 +63,7 @@ class calcular_Yield(object):
 		matriz_k = matriz_k.transpose()
 		longitud_k = matriz_k.shape[0]
 		longitud_t = len(Temperaturas)
-		log_k = np.zeros((longitud_k,3)) #parametros del intercepto y la pendiente
+		log_k = np.zeros((longitud_k,3)) #parametros del intercepto, pendiente y ajuste
 		inv_temp = lambda x: 1/x
 		Temperaturas = np.array(Temperaturas)
 		Temperaturas.astype(float)
@@ -68,7 +71,7 @@ class calcular_Yield(object):
 		another_len = matriz_k.shape[1]
 		for i in range(longitud_k):
 			vector = np.array([])
-			index = np.array([])
+			index = np.array([], dtype = 'int')
 			c = 0
 			for j in range(another_len):
 				if matriz_k[i][j] != 0:
