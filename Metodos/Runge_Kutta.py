@@ -29,6 +29,8 @@ class Runge_Kutta(object):
 		self.matriz_y_experimental = matriz_y_experimental
 		self.matriz_nodos_reacciones = matriz_nodos_reacciones
 		self.metodo = metodo
+		self.n = 0
+		self.order = 1
 	
 	def funcionRungeKutta (self,vector_k):
 		"""
@@ -57,7 +59,13 @@ class Runge_Kutta(object):
 	def vector_k_estimacion_inicial(self):
 		# Usar algoritmo de Monte Carlo para el vector_k_estimacion
 		size = self.matriz_nodos_reacciones.shape[0]
-		vector_k = np.random.random(size)
+		self.n += 1
+		if (self.n <= 40*self.order):
+			self.order += 1
+			if self.order == 10:
+				self.n = 0
+				self.order = 1
+		vector_k = np.random.random(size)*10**(4-self.order)
 		return(vector_k)
 
 	@property
@@ -82,7 +90,8 @@ class Runge_Kutta(object):
 def matriz_concentraciones(vector_y,matriz_nodos_reacciones):
 
 	n = len(matriz_nodos_reacciones)
-	numero_componentes = np.amax(matriz_nodos_reacciones)
+	numero_componentes = len(vector_y)
+	#numero_componentes = np.amax(matriz_nodos_reacciones)
 	matriz_concentraciones = np.zeros((numero_componentes,n))
 	ki = 1
 	for pareja in matriz_nodos_reacciones:
