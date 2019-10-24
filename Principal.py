@@ -76,6 +76,7 @@ def main():
 			Error = Objeto_y.calcular_error(Y_experimental,Y_calculado)
 			TOL = Error
 			vector_k = np.where(abs(vector_k) < 1E-06, 0, vector_k)
+			print(vector_k)
 			if np.any(vector_k < 0):
 				TOL = 1E-04
 			#Se dejan los limites de la regresion en todos los reales para que el metodo de regresion converja
